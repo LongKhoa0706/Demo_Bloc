@@ -12,12 +12,9 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     bloc = Bloc();
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -27,10 +24,7 @@ class _LoginFormState extends State<LoginForm> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          height: MediaQuery
-              .of(context)
-              .size
-              .height,
+          height: MediaQuery.of(context).size.height,
           padding: EdgeInsets.all(16),
           child: Column(
             mainAxisSize: MainAxisSize.max,
@@ -38,24 +32,23 @@ class _LoginFormState extends State<LoginForm> {
             children: <Widget>[
               StreamBuilder<String>(
                 stream: bloc.email,
-
-                builder:(_,snapshot)=> TextField(
+                builder: (_, snapshot) => TextField(
                   onChanged: bloc.emailChange,
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: "Enter email",
-                      labelText: "Email",
-                    errorText: snapshot.error
-                     ),
+                    border: OutlineInputBorder(),
+                    hintText: "Enter email",
+                    labelText: "Email",
+                    errorText: snapshot.error,
+                  ),
                 ),
               ),
               SizedBox(
-                height: 20.0,
+                height: 20,
               ),
               StreamBuilder<String>(
                 stream: bloc.password,
-                builder:(_,snapshot)=> TextField(
+                builder:(_, snapshot) => TextField(
                   onChanged: bloc.passwordChange,
                   keyboardType: TextInputType.text,
                   obscureText: true,
@@ -63,22 +56,24 @@ class _LoginFormState extends State<LoginForm> {
                     border: OutlineInputBorder(),
                     hintText: "Enter password",
                     labelText: "Password",
-                    errorText: snapshot.error
+                    errorText: snapshot.error,
                   ),
                 ),
               ),
               SizedBox(
-                height: 20.0,
+                height: 20,
               ),
               StreamBuilder<bool>(
                 stream: bloc.submitCheck,
-                builder: (_,snapshot)=> RaisedButton(
-                  color: Colors.tealAccent,
-                  onPressed: () {
-                    snapshot.hasData ? changePage(): Colors.red;
-                  },
-                  child: Text("Submit"),
-                ),
+                builder: (_, snapshot) {
+                  // nếu phần valid email và password không đúng thì disable button
+                  // tham số onPressed là null thì button sẽ disabled.
+                  return RaisedButton(
+                    color: Colors.tealAccent,
+                    onPressed: (snapshot.hasData && snapshot.data) ? changePage : null,
+                    child: Text("Submit"),
+                  );
+                }
               ),
             ],
           ),
@@ -87,12 +82,12 @@ class _LoginFormState extends State<LoginForm> {
     );
   }
 
-  changePage() {
-    Navigator.push(context, MaterialPageRoute(builder: (_)=>PageTwo()));
+  void changePage() {
+    Navigator.push(context, MaterialPageRoute(builder: (_) => PageTwo()));
   }
+
   @override
   void dispose() {
-    // TODO: implement dispose
     bloc.dispose();
     super.dispose();
   }
